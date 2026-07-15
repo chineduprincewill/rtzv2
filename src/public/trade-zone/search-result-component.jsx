@@ -1,10 +1,15 @@
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { members } from './members';
 import { Award, TrendingDown, TrendingUp } from 'lucide-react';
+import ListAction from './list-action';
+import MapAction from './map-action';
+import MinimalMap from './minimal-map';
+import SvgLoader from '../../components/svg-loader';
 
-const SearchResultComponent = ({ optionsarr, location, verifiedarr, quantity, selectedAction }) => {
+const SearchResultComponent = ({ optionsarr, location, verifiedarr, quantity, selectedAction, view }) => {
 
     const [membersList, setMembersList] = useState(members.filter(mem => mem?.user_type.length > 0));
+    const [loading, setLoading] = useState(false)
 
     const filterMembers = useMemo(() => {
         let filtered = membersList;
@@ -54,41 +59,25 @@ const SearchResultComponent = ({ optionsarr, location, verifiedarr, quantity, se
 
     console.log(verifiedarr)
 
+    useEffect(() => {
+        setLoading(true);
+    }, [filterMembers])
+
+    useEffect(() => {
+        loading && setTimeout(() => setLoading(false), 1000)
+    }, [loading])
+
     return (
         <div className='w-full grid gap-4 rounded-2xl p-4 border border-muted-foreground/30 my-4 min-h-64 shadow-inner'>
             <div className='w-full flex justify-end'>
                 <span className='text-muted-foreground text-lg font-extralight'>Total search result : {filterMembers.length}</span>
             </div>
         {
-            filterMembers.length > 0 && filterMembers.map((member, index) => (
-                <div key={index} className='grid gap-2 md:flex md:justify-between md:items-center w-full p-4 rounded-r-2xl border border-muted-foreground/10 hover:bg-muted-foreground/10 cursor-pointer'>
-                    <div className='max-w-max grid gap-1'>
-                        {
-                            member?.action === "selling" ?
-                            <div className='flex items-end gap-1 text-sm text-green-600 mb-[-9px]'>
-                                <TrendingUp className='h-5 w-5' />
-                                <span>Selling</span>
-                            </div> : 
-                            <div className='flex items-end gap-1 text-sm text-red-600 mb-[-9px]'>
-                                <TrendingDown className='h-5 w-5 scale-x-[-1]' />
-                                <span>Buying</span>
-                            </div>
-                        }
-                        <div className='flex items-center gap-2'>                            
-                            <span className='text-lg md:text-3xl font-extralight'>{member?.name}</span>
-                            {
-                                member?.is_verified && 
-                                <div className='p-1 rounded-full shadow-md bg-accent'>
-                                    <Award className='w-4 h-4 text-white' />
-                                </div>
-                            }
-                        </div>
-                        <span className='md:text-lg'>{member?.address}, {member?.city}, {member?.state}</span>
-                        <span className='capitalize text-xs md:text-sm'>{member?.user_type.length > 0 && member?.user_type.join(', ')}</span>
-                    </div>
-                    <span className='text-3xl md:text-4xl'>{member?.quantity_kg !== null ? member?.quantity_kg : 0}<span className='ml-1 text-sm'>kg</span></span>
-                </div>
-            ))
+            filterMembers.length > 0 && (
+                view === "list" ? <ListAction filterMembers={filterMembers} /> : (
+                loading ? <SvgLoader /> : <MapAction members={filterMembers} />
+            )
+            )
         }
         </div>
     )

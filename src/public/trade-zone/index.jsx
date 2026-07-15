@@ -288,7 +288,7 @@ const TradeZone = () => {
                                 
                                 <small className='font-extralight md:ml-4 text-muted-foreground'>Start typing your location of choice to view your search filter within the location</small>
                                 <div className='w-full overflow-x-auto'>
-                                    <SearchResultComponent optionsarr={optionsarr} location={location} verifiedarr={verifiedarr} quantity={quantity} selectedAction={selectedAction} />
+                                    <SearchResultComponent optionsarr={optionsarr} location={location} verifiedarr={verifiedarr} quantity={quantity} selectedAction={selectedAction} view={view} />
                                 </div>
                             </div>
                         </div>
