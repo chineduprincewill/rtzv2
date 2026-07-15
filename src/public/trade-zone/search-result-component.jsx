@@ -1,10 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { members } from './members';
-import { Award, TrendingDown, TrendingUp } from 'lucide-react';
 import ListAction from './list-action';
 import MapAction from './map-action';
-import MinimalMap from './minimal-map';
-import SvgLoader from '../../components/svg-loader';
+import SkeletonComponent from '../../components/skeleton-component'
 
 const SearchResultComponent = ({ optionsarr, location, verifiedarr, quantity, selectedAction, view }) => {
 
@@ -75,7 +73,7 @@ const SearchResultComponent = ({ optionsarr, location, verifiedarr, quantity, se
         {
             filterMembers.length > 0 && (
                 view === "list" ? <ListAction filterMembers={filterMembers} /> : (
-                loading ? <SvgLoader /> : <MapAction members={filterMembers} />
+                loading ? <SkeletonComponent /> : <MapAction members={filterMembers} />
             )
             )
         }
